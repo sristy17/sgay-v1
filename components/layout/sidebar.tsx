@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, FileEdit, Home, LogOut, Map, FileText, Users, Settings, PlusCircle } from "lucide-react"
+import { BarChart3, FileEdit, Home, LogOut, Map, FileText, Users, Settings, PlusCircle, ShieldCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useAppContext } from "@/lib/app-context"
@@ -45,7 +45,17 @@ export function Sidebar() {
     },
   ]
 
-  // Admin and officer specific routes
+  // Admin specific routes
+  const adminRoutes = [
+    {
+      label: "Admin Panel",
+      icon: ShieldCheck,
+      href: "/admin",
+      active: pathname.startsWith("/admin"),
+    },
+  ]
+
+  // Officer and Admin shared routes
   const managementRoutes = [
     {
       label: "Manage Data",
@@ -68,8 +78,17 @@ export function Sidebar() {
   ]
 
   // Combine routes based on user role
-  const routes =
-    user?.role === "admin" || user?.role === "officer" ? [...commonRoutes, ...managementRoutes] : commonRoutes
+  let routes = [...commonRoutes]
+  
+  // Add admin panel for admin users only
+  if (user?.role === "admin") {
+    routes = [...routes, ...adminRoutes]
+  }
+  
+  // Add management routes for both admin and officers
+  if (user?.role === "admin" || user?.role === "officer") {
+    routes = [...routes, ...managementRoutes]
+  }
 
   return (
     <aside
@@ -104,15 +123,15 @@ export function Sidebar() {
         </nav>
       </div>
       <div className="border-t p-4">
-        <div className={cn("mb-2 flex items-center gap-2", !isOpen && "md:hidden")}>
+        {/* <div className={cn("mb-2 flex items-center gap-2", !isOpen && "md:hidden")}>
           <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
             <Users className="h-4 w-4" />
           </div>
-          <div>
+          {/* <div>
             <p className="text-sm font-medium">{user?.username}</p>
             <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
-          </div>
-        </div>
+          </div> }
+        </div> */}
         <Button
           variant="ghost"
           className={cn("justify-start gap-3 w-full", !isOpen && "md:justify-center md:px-2")}

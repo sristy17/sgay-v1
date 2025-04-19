@@ -5,7 +5,6 @@ export interface House {
   village: string
   stage: string
   progress: number
-  fundUtilized: string
   lat: number
   lng: number
   images: string[]
@@ -54,4 +53,51 @@ export interface Officer {
 }
 
 export type ConstructionStage = "Not Started" | "Foundation" | "Walls" | "Roof" | "Finishing" | "Completed" | "Delayed"
+
+export interface PendingEntry {
+  id: number;
+  originalHouseId?: number; // ID of the original beneficiary (for edits/updates)
+  updateType?: string; // "edit", "progress", or undefined for new entries
+  beneficiaryName: string;
+  constituency?: string;
+  village?: string;
+  stage?: string;
+  progress?: number;
+  contactNumber?: string;
+  aadharNumber?: string;
+  familyMembers?: number;
+  assignedOfficer?: string;
+  startDate?: string;
+  expectedCompletion?: string;
+  remarks?: string;
+  lat?: number;
+  lng?: number;
+  images?: string[];
+  submittedBy: string;
+  submittedOn: string;
+  fundDetails?: {
+    allocated?: string;
+    released?: string;
+    utilized?: string;
+    remaining?: string;
+  };
+  constructionDetails?: {
+    foundation?: {
+      status?: string;
+      completionDate?: string;
+    };
+    walls?: {
+      status?: string;
+      completionDate?: string;
+    };
+    roof?: {
+      status?: string;
+      completionDate?: string;
+    };
+    finishing?: {
+      status?: string;
+      completionDate?: string;
+    };
+  };
+}
 

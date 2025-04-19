@@ -13,8 +13,15 @@ import { ArrowLeft, Calendar, CheckCircle, Clock, Edit, Home, IndianRupee, MapPi
 import { fetchHouseById } from "@/lib/api"
 import type { House } from "@/lib/types"
 import { useSidebar } from "@/components/sidebar-provider"
+import { use } from "react"
 
-export default function BeneficiaryDetailsPage({ params }: { params: { id: string } }) {
+interface PageParams {
+  params: { id: string };
+}
+
+export default function BeneficiaryDetailsPage({ params }: PageParams) {
+  const { id } = params;
+
   const [house, setHouse] = useState<House | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
@@ -23,7 +30,7 @@ export default function BeneficiaryDetailsPage({ params }: { params: { id: strin
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await fetchHouseById(Number.parseInt(params.id))
+        const data = await fetchHouseById(Number.parseInt(id, 10))
         setHouse(data)
       } catch (error) {
         console.error("Failed to fetch house details:", error)
@@ -33,7 +40,7 @@ export default function BeneficiaryDetailsPage({ params }: { params: { id: strin
     }
 
     loadData()
-  }, [params.id])
+  }, [id])
 
   if (isLoading) {
     return (
@@ -413,7 +420,7 @@ export default function BeneficiaryDetailsPage({ params }: { params: { id: strin
                 </div>
                 <div>
                   <p className="text-sm font-medium">Fund Utilized</p>
-                  <p className="text-sm text-muted-foreground">{house.fundUtilized}</p>
+                  <p className="text-sm text-muted-foreground">{house.fundDetails.utilized}</p>
                 </div>
               </div>
             </CardContent>

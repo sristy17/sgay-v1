@@ -22,8 +22,8 @@ export function Navbar() {
         <span className="sr-only">Toggle menu</span>
       </Button>
       <div className="flex-1">
-        <h1 className="text-lg font-semibold md:text-xl">SGAY GIS-MIS</h1>
-        <p className="text-sm text-muted-foreground">Government Scheme Monitoring System</p>
+        <h1 className="text-lg font-semibold md:text-xl">Sikkim Garib Awas Yojna</h1>
+        <p className="text-sm text-muted-foreground">GIS Based Management System</p>
       </div>
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon">

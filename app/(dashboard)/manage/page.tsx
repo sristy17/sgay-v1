@@ -44,7 +44,6 @@ export default function ManagePage() {
   const { toast } = useToast()
 
   useEffect(() => {
-    // Check if user has permission to access this page
     if (user && user.role !== "admin" && user.role !== "officer") {
       router.push("/dashboard")
       return
@@ -66,7 +65,6 @@ export default function ManagePage() {
   }, [user, router])
 
   useEffect(() => {
-    // Filter houses based on search term and active tab
     let filtered = houses
 
     if (searchTerm) {
@@ -75,7 +73,7 @@ export default function ManagePage() {
         (house) =>
           house.beneficiaryName.toLowerCase().includes(term) ||
           house.village.toLowerCase().includes(term) ||
-          house.district.toLowerCase().includes(term) ||
+          house.constituency.toLowerCase().includes(term) ||
           house.assignedOfficer.toLowerCase().includes(term),
       )
     }
@@ -204,7 +202,7 @@ export default function ManagePage() {
                           <TableCell>
                             <div>
                               <div>{house.village}</div>
-                              <div className="text-sm text-muted-foreground">{house.district}</div>
+                              <div className="text-sm text-muted-foreground">{house.constituency}</div>
                             </div>
                           </TableCell>
                           <TableCell>

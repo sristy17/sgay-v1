@@ -1,0 +1,465 @@
+{
+  "pendingEntries": [
+    {
+      "id": 101,
+      "beneficiaryName": "Denzing Bhutia",
+      "constituency": "Gangtok",
+      "village": "Tadong",
+      "stage": "In Progress",
+      "progress": 45,
+      "submittedBy": "Karma Dorjee",
+      "submittedOn": "2024-12-10",
+      "status": "pending",
+      "updateType": "Edit",
+      "remarks": "Foundation completed. Wall construction is in progress. Materials for roofing have been delivered to the site.",
+      "images": [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,50,000",
+        "released": "Rs. 1,25,000",
+        "utilized": "Rs. 1,00,000",
+        "remaining": "Rs. 1,50,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-11-25"
+        },
+        "walls": {
+          "status": "In Progress"
+        },
+        "roof": {
+          "status": "Not Started"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "id": 102,
+      "beneficiaryName": "Dikila Sherpa",
+      "constituency": "Namchi",
+      "village": "Namchi",
+      "stage": "Foundation",
+      "progress": 20,
+      "submittedBy": "Sonam Gyatso",
+      "submittedOn": "2024-12-08",
+      "status": "pending",
+      "updateType": "Edit",
+      "remarks": "Foundation work started. Excavation complete and concrete pouring scheduled for next week.",
+      "images": [
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,50,000",
+        "released": "Rs. 75,000",
+        "utilized": "Rs. 50,000",
+        "remaining": "Rs. 2,00,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "In Progress"
+        },
+        "walls": {
+          "status": "Not Started"
+        },
+        "roof": {
+          "status": "Not Started"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "id": 103,
+      "originalHouseId": 5,
+      "beneficiaryName": "Kunzang Lepcha",
+      "constituency": "Mangan",
+      "village": "Lachen",
+      "stage": "Walls",
+      "progress": 35,
+      "submittedBy": "Pema Wangdi",
+      "submittedOn": "2024-12-05",
+      "status": "pending",
+      "updateType": "Edit",
+      "remarks": "Updated contact information and corrected address. Family members increased from 3 to 5.",
+      "contactNumber": "9876543210",
+      "aadharNumber": "123456789012",
+      "familyMembers": 5,
+      "images": [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 3,00,000",
+        "released": "Rs. 1,00,000",
+        "utilized": "Rs. 90,000",
+        "remaining": "Rs. 2,10,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-11-10"
+        },
+        "walls": {
+          "status": "In Progress"
+        },
+        "roof": {
+          "status": "Not Started"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "id": 104,
+      "originalHouseId": 8,
+      "beneficiaryName": "Tshering Dorji",
+      "constituency": "Gyalshing",
+      "village": "Tashiding",
+      "stage": "Roof",
+      "progress": 65,
+      "submittedBy": "Rinchen Bhutia",
+      "submittedOn": "2024-12-12",
+      "status": "pending",
+      "updateType": "Progress",
+      "remarks": "Wall construction completed. Roof work started and expected to be completed in 2 weeks.",
+      "images": [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,75,000",
+        "released": "Rs. 2,00,000",
+        "utilized": "Rs. 1,80,000",
+        "remaining": "Rs. 95,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-10-15"
+        },
+        "walls": {
+          "status": "Completed",
+          "completionDate": "2024-12-10"
+        },
+        "roof": {
+          "status": "In Progress"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "id": 105,
+      "beneficiaryName": "Namgyal Lhamo",
+      "constituency": "Gangtok",
+      "village": "Tadong",
+      "stage": "Not Started",
+      "progress": 0,
+      "contactNumber": "9876543211",
+      "aadharNumber": "123456789013",
+      "familyMembers": 4,
+      "assignedOfficer": "Yangchen Dolma",
+      "startDate": "2024-12-20",
+      "expectedCompletion": "2025-06-20",
+      "submittedBy": "Yangchen Dolma",
+      "submittedOn": "2024-12-13",
+      "status": "pending",
+      "updateType": "New",
+      "remarks": "New beneficiary. Site inspection completed and ready for construction.",
+      "lat": 27.3321,
+      "lng": 88.6141,
+      "images": [
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,50,000",
+        "released": "Rs. 0",
+        "utilized": "Rs. 0",
+        "remaining": "Rs. 2,50,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Not Started"
+        },
+        "walls": {
+          "status": "Not Started"
+        },
+        "roof": {
+          "status": "Not Started"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "id": 106,
+      "originalHouseId": 12,
+      "beneficiaryName": "Phurba Sherpa",
+      "constituency": "Namchi",
+      "village": "Namchi Central",
+      "stage": "Finishing",
+      "progress": 90,
+      "submittedBy": "Mingma Lhamu",
+      "submittedOn": "2024-12-14",
+      "status": "pending",
+      "updateType": "Progress",
+      "remarks": "Roof work completed. Finishing work in progress. Electrical and plumbing work completed.",
+      "images": [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,50,000",
+        "released": "Rs. 2,50,000",
+        "utilized": "Rs. 2,25,000",
+        "remaining": "Rs. 25,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-08-15"
+        },
+        "walls": {
+          "status": "Completed",
+          "completionDate": "2024-10-10"
+        },
+        "roof": {
+          "status": "Completed",
+          "completionDate": "2024-11-20"
+        },
+        "finishing": {
+          "status": "In Progress"
+        }
+      }
+    },
+    {
+      "id": 107,
+      "originalHouseId": 3,
+      "beneficiaryName": "Dawa Tamang",
+      "constituency": "Upper Burtuk",
+      "village": "Sichey",
+      "stage": "Completed",
+      "progress": 100,
+      "submittedBy": "Phurba Tamang",
+      "submittedOn": "2024-12-15",
+      "status": "pending",
+      "updateType": "Progress",
+      "remarks": "Construction fully completed. Final inspection done. House ready for handover.",
+      "contactNumber": "9876543214",
+      "images": [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,50,000",
+        "released": "Rs. 2,50,000",
+        "utilized": "Rs. 2,50,000",
+        "remaining": "Rs. 0"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-07-15"
+        },
+        "walls": {
+          "status": "Completed",
+          "completionDate": "2024-09-10"
+        },
+        "roof": {
+          "status": "Completed",
+          "completionDate": "2024-10-25"
+        },
+        "finishing": {
+          "status": "Completed",
+          "completionDate": "2024-12-14"
+        }
+      }
+    },
+    {
+      "id": 108,
+      "beneficiaryName": "ABCD",
+      "constituency": "Gangtok",
+      "village": "Babhandiha",
+      "stage": "Not Started",
+      "progress": 0,
+      "contactNumber": "1234567890",
+      "aadharNumber": "6515421",
+      "familyMembers": 1,
+      "assignedOfficer": "Pema Wangdi",
+      "startDate": "2025-04-12",
+      "expectedCompletion": "2025-05-09",
+      "submittedBy": "System",
+      "submittedOn": "2025-04-12T00:00:00.000Z",
+      "remarks": "00000000000",
+      "updateType": "New",
+      "lat": 27.59,
+      "lng": 88.5,
+      "images": [
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,50,000",
+        "released": "Rs. 0",
+        "utilized": "Rs. 0",
+        "remaining": "Rs. 2,50,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Not Started"
+        },
+        "walls": {
+          "status": "Not Started"
+        },
+        "roof": {
+          "status": "Not Started"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "id": 109,
+      "originalHouseId": 15,
+      "beneficiaryName": "Pemba Tshering",
+      "constituency": "Martam-Rumtek",
+      "village": "Rumtek",
+      "stage": "In Progress",
+      "progress": 55,
+      "submittedBy": "Tashi Namgyal",
+      "submittedOn": "2024-12-16",
+      "status": "pending",
+      "updateType": "New",
+      "remarks": "Modified house layout due to terrain constraints. Updated fund allocation to accommodate additional foundation work.",
+      "contactNumber": "9876543215",
+      "aadharNumber": "987654321098",
+      "familyMembers": 6,
+      "images": [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 3,25,000",
+        "released": "Rs. 1,75,000",
+        "utilized": "Rs. 1,50,000",
+        "remaining": "Rs. 1,75,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-10-25"
+        },
+        "walls": {
+          "status": "Completed",
+          "completionDate": "2024-12-10"
+        },
+        "roof": {
+          "status": "In Progress"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "id": 110,
+      "originalHouseId": 6,
+      "beneficiaryName": "Lobsang Drolma",
+      "constituency": "Dzongu",
+      "village": "Passingdang",
+      "stage": "Walls",
+      "progress": 30,
+      "submittedBy": "Karma Dorjee",
+      "submittedOn": "2024-12-17",
+      "status": "pending",
+      "updateType": "Progress",
+      "remarks": "Foundation work completed earlier than scheduled. Started wall construction. Additional support required due to challenging terrain.",
+      "images": [
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400",
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,75,000",
+        "released": "Rs. 1,50,000",
+        "utilized": "Rs. 1,20,000",
+        "remaining": "Rs. 1,55,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-12-05"
+        },
+        "walls": {
+          "status": "In Progress"
+        },
+        "roof": {
+          "status": "Not Started"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    },
+    {
+      "beneficiaryName": "Dawa Sherpa",
+      "submittedBy": "Tashi Namgyal",
+      "submittedOn": "2025-04-19T17:02:55.777Z",
+      "id": 111,
+      "originalHouseId": 3,
+      "updateType": "progress",
+      "constituency": "Yuksom-Tashiding",
+      "village": "Pelling",
+      "stage": "In Progress",
+      "progress": 44,
+      "contactNumber": "9876543212",
+      "aadharNumber": "XXXX-XXXX-9012",
+      "familyMembers": 3,
+      "assignedOfficer": "Tashi Namgyal",
+      "startDate": "2024-07-01",
+      "expectedCompletion": "2025-05-15",
+      "remarks": "Slight delay due to material shortage",
+      "lat": 27.317,
+      "lng": 88.2336,
+      "images": [
+        "/placeholder.svg?height=300&width=400"
+      ],
+      "fundDetails": {
+        "allocated": "Rs. 2,50,000",
+        "released": "Rs. 1,20,000",
+        "utilized": "Rs. 90,000",
+        "remaining": "Rs. 160,000"
+      },
+      "constructionDetails": {
+        "foundation": {
+          "status": "Completed",
+          "completionDate": "2024-08-10"
+        },
+        "walls": {
+          "status": "In Progress"
+        },
+        "roof": {
+          "status": "In Progress"
+        },
+        "finishing": {
+          "status": "Not Started"
+        }
+      }
+    }
+  ]
+}

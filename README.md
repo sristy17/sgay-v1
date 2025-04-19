@@ -23,10 +23,9 @@ The initiative addresses the absence of a centralized system for tracking the pr
 
 ## Tech Stack
 
-- **Frontend:** HTML, CSS, JavaScript *(Add framework if used, e.g., React.js, Vue.js)*
-- **Backend:** *(Specify, e.g., Node.js, Express.js, Django, etc.)*
-- **Database:** *(Specify, e.g., MongoDB, MySQL, etc.)*
-- **GIS Integration:** *(Specify, e.g., Leaflet.js, Mapbox, Google Maps API, etc.)*
+- **Frontend:** Nextjs
+- **Backend & Database:** Supabase
+- **GIS Integration:** Google Maps API
 
 ## Installation & Setup
 
@@ -70,15 +69,7 @@ License
 
 This project is licensed under the MIT License.
 
-Contact
 
-For any inquiries or feedback, please contact:
-
-Abhishek Roy 
-
-Email: the.abhishekkroy@gmail.com
-
-GitHub: the-abhishekroy
 
 
 
