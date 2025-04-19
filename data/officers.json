@@ -7,7 +7,12 @@
       "constituency": "Gangtok",
       "contactNumber": "9876543001",
       "email": "karma.dorjee@example.gov.in",
-      "assignedHouses": [1, 5, 9, 13]
+      "assignedHouses": [
+        1,
+        5,
+        9,
+        13
+      ]
     },
     {
       "id": 2,
@@ -16,7 +21,14 @@
       "constituency": "Lachen-Mangan",
       "contactNumber": "9876543002",
       "email": "pema.wangdi@example.gov.in",
-      "assignedHouses": [2, 6, 10, 14]
+      "assignedHouses": [
+        2,
+        6,
+        10,
+        14,
+        16,
+        16
+      ]
     },
     {
       "id": 3,
@@ -25,7 +37,12 @@
       "constituency": "Yuksom-Tashiding",
       "contactNumber": "9876543003",
       "email": "tashi.namgyal@example.gov.in",
-      "assignedHouses": [3, 7, 11, 15]
+      "assignedHouses": [
+        3,
+        7,
+        11,
+        15
+      ]
     },
     {
       "id": 4,
@@ -34,8 +51,94 @@
       "constituency": "Namchi-Singhithang",
       "contactNumber": "9876543004",
       "email": "sonam.gyatso@example.gov.in",
-      "assignedHouses": [4, 8, 12]
+      "assignedHouses": [
+        4,
+        8,
+        12
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Dawa Sherpa",
+      "designation": "Junior Engineer",
+      "constituency": "Rinchenpong",
+      "contactNumber": "9876543005",
+      "email": "dawa.sherpa@example.gov.in",
+      "assignedHouses": [
+        17,
+        21,
+        25
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Rinchen Bhutia",
+      "designation": "Senior Engineer",
+      "constituency": "Barfung",
+      "contactNumber": "9876543006",
+      "email": "rinchen.bhutia@example.gov.in",
+      "assignedHouses": [
+        18,
+        22,
+        26,
+        30
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Mingma Lhamu",
+      "designation": "Assistant Engineer",
+      "constituency": "Arithang",
+      "contactNumber": "9876543007",
+      "email": "mingma.lhamu@example.gov.in",
+      "assignedHouses": [
+        19,
+        23,
+        27
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Tenzing Norbu",
+      "designation": "Junior Engineer",
+      "constituency": "Melli",
+      "contactNumber": "9876543008",
+      "email": "tenzing.norbu@example.gov.in",
+      "assignedHouses": [
+        20,
+        24,
+        28,
+        31
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Phurba Tamang",
+      "designation": "Senior Engineer",
+      "constituency": "Chujachen",
+      "contactNumber": "9876543009",
+      "email": "phurba.tamang@example.gov.in",
+      "assignedHouses": [
+        32,
+        35,
+        38
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Yangchen Dolma",
+      "designation": "Executive Engineer",
+      "constituency": "Upper Tadong",
+      "contactNumber": "9876543010",
+      "email": "yangchen.dolma@example.gov.in",
+      "assignedHouses": [
+        33,
+        36,
+        39,
+        42
+      ]
     }
+
+
   ]
 }
-

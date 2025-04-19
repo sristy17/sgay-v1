@@ -161,8 +161,8 @@ export default function AddBeneficiaryPage() {
       );
       const remaining = allocated - utilized;
 
-      // Prepare house data
-      const houseData = {
+      // Prepare house data for pending approval
+      const pendingEntryData = {
         beneficiaryName: data.beneficiaryName,
         constituency: data.constituency,
         village: data.village,
@@ -175,14 +175,16 @@ export default function AddBeneficiaryPage() {
           images.length > 0
             ? images
             : ["/placeholder.svg?height=300&width=400"],
-        lastUpdated: new Date().toISOString().split("T")[0],
-        startDate: data.startDate,
-        expectedCompletion: data.expectedCompletion,
+        submittedBy: data.assignedOfficer,
+        submittedOn: new Date().toISOString().split("T")[0],
+        status: "pending",
         contactNumber: data.contactNumber,
         aadharNumber: data.aadharNumber,
         familyMembers: data.familyMembers,
         assignedOfficer: data.assignedOfficer,
         remarks: data.remarks || "",
+        startDate: data.startDate,
+        expectedCompletion: data.expectedCompletion,
         fundDetails: {
           allocated: data.fundAllocated,
           released: data.fundReleased,
@@ -229,22 +231,34 @@ export default function AddBeneficiaryPage() {
         },
       };
 
-      // Add house
-      const newHouse = await addHouse(houseData);
-
-      toast({
-        title: "Success",
-        description: "Beneficiary added successfully",
+      // Submit to pending entries instead of directly adding
+      const response = await fetch('/api/pending-entries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pendingEntryData),
       });
 
-      // Redirect to the new house details
-      router.push(`/beneficiaries/${newHouse.id}`);
+      if (!response.ok) {
+        throw new Error('Failed to submit beneficiary for approval');
+      }
+
+      const result = await response.json();
+
+      toast({
+        title: "Successfully submitted",
+        description: "Beneficiary has been submitted for admin approval",
+      });
+
+      // Redirect to the dashboard or a confirmation page
+      router.push('/dashboard?submitted=true');
     } catch (error) {
-      console.error("Error adding house:", error);
+      console.error("Error submitting beneficiary:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to add beneficiary. Please try again.",
+        description: "Failed to submit beneficiary for approval. Please try again.",
       });
     } finally {
       setIsSubmitting(false);

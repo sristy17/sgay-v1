@@ -10,8 +10,24 @@ import type { House } from "@/lib/types"
 import { DataTable } from "@/components/data-table"
 import { ProgressChart } from "@/components/charts/progress-chart"
 import { ConstituencyChart } from "@/components/charts/constituency-chart"
+import { useSearchParams } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function DashboardPage() {
+  const searchParams = useSearchParams()
+  const submitted = searchParams.get("submitted")
+  const { toast } = useToast()
+
+  useEffect(() => {
+    // Show a toast notification if coming from a successful submission
+    if (submitted === "true") {
+      toast({
+        title: "Entry submitted",
+        description: "Your beneficiary entry is pending admin approval",
+      })
+    }
+  }, [submitted, toast])
+
   const [houses, setHouses] = useState<House[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -132,11 +148,6 @@ export default function DashboardPage() {
       </Card>
 
       <Tabs defaultValue="overview">
-        <TabsList className="grid w-full grid-cols-3 mb-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="charts">Charts</TabsTrigger>
-          <TabsTrigger value="data">Data Table</TabsTrigger>
-        </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
@@ -155,25 +166,7 @@ export default function DashboardPage() {
             </Card>
           </div>
         </TabsContent>
-        <TabsContent value="charts" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Progress by Stage</CardTitle>
-                <CardDescription>Distribution of houses by construction stage</CardDescription>
-              </CardHeader>
-              <CardContent className="h-80">{!isLoading && <ProgressChart houses={houses} />}</CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Constituency Distribution</CardTitle>
-                <CardDescription>Houses by constituency</CardDescription>
-              </CardHeader>
-              <CardContent className="h-80">{!isLoading && <ConstituencyChart houses={houses} />}</CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        <TabsContent value="data">
+        {/* <TabsContent value="data">
           <Card>
             <CardHeader>
               <CardTitle>Houses Data</CardTitle>
@@ -181,7 +174,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>{!isLoading && <DataTable houses={houses} />}</CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
     </div>
   )

@@ -1,11 +1,10 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,16 +12,14 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Slider } from "@/components/ui/slider"
-import { ArrowLeft, Check, Loader2, Upload, X } from "lucide-react"
-import { fetchHouseById, updateHouse } from "@/lib/api"
+import { ArrowLeft, Check, Loader2, Upload, X, FileText } from "lucide-react"
+import { fetchHouseById } from "@/lib/api"
 import type { House } from "@/lib/types"
 import { useSidebar } from "@/components/sidebar-provider"
 import { useToast } from "@/components/ui/use-toast"
 
-// Form schema
+// Form schema (removed progress)
 const formSchema = z.object({
-  progress: z.coerce.number().min(0).max(100),
   stage: z.string().min(1, { message: "Please select a stage" }),
   fundUtilized: z.string().min(1, { message: "Utilized fund is required" }),
   foundationStatus: z.string().min(1, { message: "Please select foundation status" }),
@@ -41,6 +38,7 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [newImages, setNewImages] = useState<string[]>([])
+  const [calculatedProgress, setCalculatedProgress] = useState(0)
   const router = useRouter()
   const { user } = useSidebar()
   const { toast } = useToast()
@@ -49,7 +47,6 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      progress: 0,
       stage: "",
       fundUtilized: "",
       foundationStatus: "",
@@ -60,14 +57,43 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
     },
   })
 
+  const [foundationStatus, wallsStatus, roofStatus, finishingStatus] = useWatch({
+    control: form.control,
+    name: [
+      "foundationStatus",
+      "wallsStatus",
+      "roofStatus",
+      "finishingStatus",
+    ],
+  });
+
   useEffect(() => {
-    // Check if user has permission to access this page
+    const calculate = () => {
+      let progress = 0;
+      const stages = [foundationStatus, wallsStatus, roofStatus, finishingStatus];
+      const completedWeight = 70 / stages.length;
+      const inProgressWeight = 30 / stages.length;
+
+      stages.forEach((status) => {
+        if (status === "Completed") {
+          progress += completedWeight;
+        } else if (status === "In Progress") {
+          progress += inProgressWeight / 2;
+        }
+      });
+
+      setCalculatedProgress(Math.round(Math.min(progress, 100)));
+    };
+
+    calculate();
+  }, [foundationStatus, wallsStatus, roofStatus, finishingStatus]);
+
+  useEffect(() => {
     if (user && user.role !== "admin" && user.role !== "officer") {
       router.push("/dashboard")
       return
     }
 
-    // Load house data
     const loadData = async () => {
       try {
         setIsLoading(true)
@@ -76,19 +102,17 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
         if (houseData) {
           setHouse(houseData)
 
-          // Set form values
           form.reset({
-            progress: houseData.progress,
             stage: houseData.stage,
-            fundUtilized: houseData.fundUtilized,
-            foundationStatus: houseData.constructionDetails.foundation.status,
-            foundationDate: houseData.constructionDetails.foundation.completionDate || "",
-            wallsStatus: houseData.constructionDetails.walls.status,
-            wallsDate: houseData.constructionDetails.walls.completionDate || "",
-            roofStatus: houseData.constructionDetails.roof.status,
-            roofDate: houseData.constructionDetails.roof.completionDate || "",
-            finishingStatus: houseData.constructionDetails.finishing.status,
-            finishingDate: houseData.constructionDetails.finishing.completionDate || "",
+            fundUtilized: houseData.fundDetails?.utilized || "",
+            foundationStatus: houseData.constructionDetails?.foundation?.status || "Not Started",
+            foundationDate: houseData.constructionDetails?.foundation?.completionDate || "",
+            wallsStatus: houseData.constructionDetails?.walls?.status || "Not Started",
+            wallsDate: houseData.constructionDetails?.walls?.completionDate || "",
+            roofStatus: houseData.constructionDetails?.roof?.status || "Not Started",
+            roofDate: houseData.constructionDetails?.roof?.completionDate || "",
+            finishingStatus: houseData.constructionDetails?.finishing?.status || "Not Started",
+            finishingDate: houseData.constructionDetails?.finishing?.completionDate || "",
             remarks: houseData.remarks,
           })
         }
@@ -128,27 +152,51 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
   }
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    if (!house) return
+    if (!house) {
+      console.error("House data is missing");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Beneficiary data could not be loaded. Please try again.",
+      });
+      return;
+    }
 
-    setIsSubmitting(true)
+    const currentUser = user || { name: "System", email: "system@example.com" };
+
+    setIsSubmitting(true);
 
     try {
-      // Calculate remaining fund
-      const allocated = Number.parseInt(house.fundDetails.allocated.replace(/[^0-9]/g, ""))
-      const utilized = Number.parseInt(data.fundUtilized.replace(/[^0-9]/g, ""))
-      const remaining = allocated - utilized
+      const allocated = Number.parseInt(house.fundDetails?.allocated?.replace(/[^0-9]/g, "") || "0");
+      const utilized = Number.parseInt(data.fundUtilized.replace(/[^0-9]/g, "") || "0");
+      const remaining = allocated - utilized;
 
-      // Prepare house data
-      const houseData: Partial<House> = {
+      console.log("Preparing submission data...");
+
+      const pendingEntry = {
+        id: Date.now(),
+        originalHouseId: house.id,
+        updateType: "progress",
+        beneficiaryName: house.beneficiaryName,
+        constituency: house.constituency,
+        village: house.village,
         stage: data.stage,
-        progress: data.progress,
-        fundUtilized: data.fundUtilized,
-        lastUpdated: new Date().toISOString().split("T")[0],
+        progress: calculatedProgress, 
+        contactNumber: house.contactNumber,
+        aadharNumber: house.aadharNumber,
+        familyMembers: house.familyMembers,
+        assignedOfficer: house.assignedOfficer,
+        startDate: house.startDate,
+        expectedCompletion: house.expectedCompletion,
         remarks: data.remarks || house.remarks,
-        // Add new images if any
-        images: newImages.length > 0 ? [...house.images, ...newImages] : house.images,
+        lat: house.lat,
+        lng: house.lng,
+        images: newImages.length > 0 ? [...(house.images || []), ...newImages] : house.images,
+        submittedBy: house.assignedOfficer,
+        submittedOn: new Date().toISOString(),
         fundDetails: {
-          ...house.fundDetails,
+          allocated: house.fundDetails?.allocated || "",
+          released: house.fundDetails?.released || "",
           utilized: data.fundUtilized,
           remaining: `Rs. ${remaining.toLocaleString()}`,
         },
@@ -170,29 +218,47 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
             completionDate: data.finishingStatus === "Completed" ? data.finishingDate : undefined,
           },
         },
+      };
+
+      console.log("Submitting data to API...");
+
+      try {
+        const response = await fetch('/api/pending-entries', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pendingEntry),
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+          throw new Error(responseData.error || `API returned status ${response.status}`);
+        }
+
+        toast({
+          title: "Success",
+          description: "Progress update submitted for approval. Changes will be visible after admin review.",
+        });
+
+        router.push(`/beneficiaries/${house.id}`);
+
+      } catch (fetchError: any) {
+        console.error("Fetch error:", fetchError);
+        throw new Error(`Failed to submit data: ${fetchError.message}`);
       }
-
-      // Update house
-      const updatedHouse = await updateHouse(house.id, houseData)
-
-      toast({
-        title: "Success",
-        description: "Construction progress updated successfully",
-      })
-
-      // Redirect to the house details
-      router.push(`/beneficiaries/${house.id}`)
-    } catch (error) {
-      console.error("Error updating progress:", error)
+    } catch (error: any) {
+      console.error("Error submitting progress update:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update progress. Please try again.",
-      })
+        description: error.message || "Failed to submit progress update. Please try again.",
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -232,6 +298,21 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
         </Button>
       </div>
 
+      <Card className="bg-amber-50 border-amber-200">
+        <CardContent className="pt-4 pb-2">
+          <div className="flex items-start gap-2">
+            <FileText className="h-5 w-5 text-amber-600 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-amber-800">Approval Required</p>
+              <p className="text-xs text-amber-700">
+                Progress updates submitted through this form will be sent for admin approval.
+                The original progress data will remain unchanged until approved.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="md:col-span-2">
           <CardHeader>
@@ -242,25 +323,22 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="progress"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Overall Progress: {field.value}%</FormLabel>
-                        <FormControl>
-                          <Slider
-                            defaultValue={[field.value]}
-                            max={100}
-                            step={5}
-                            onValueChange={(vals) => field.onChange(vals[0])}
-                          />
-                        </FormControl>
-                        <FormDescription>Drag the slider to update the overall progress percentage</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {/* Display the calculated progress */}
+                  <FormItem>
+                    <FormLabel>Overall Progress: {calculatedProgress}%</FormLabel>
+                    <FormControl>
+                      <div className="h-6 w-full bg-gray-200 rounded-full relative overflow-hidden">
+                        <div
+                          className="bg-blue-500 h-full rounded-full absolute left-0"
+                          style={{ width: `${calculatedProgress}%` }}
+                        ></div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-gray-700">
+                          {calculatedProgress}%
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormDescription>Calculated automatically based on the stage statuses.</FormDescription>
+                  </FormItem>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
@@ -540,12 +618,12 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Saving...
+                        Submitting for Approval...
                       </>
                     ) : (
                       <>
                         <Check className="mr-2 h-4 w-4" />
-                        Update Progress
+                        Submit for Approval
                       </>
                     )}
                   </Button>
@@ -596,4 +674,3 @@ export default function UpdateProgressPage({ params }: { params: { id: string } 
     </div>
   )
 }
-

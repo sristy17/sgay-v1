@@ -7,7 +7,6 @@ import React from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -44,11 +43,9 @@ import {
   Upload, 
   X,
   Calendar,
-  Printer,
-  Download,
   FileText 
 } from "lucide-react";
-import { fetchHouseById, updateHouse, fetchOfficers } from "@/lib/api";
+import { fetchHouseById, fetchOfficers } from "@/lib/api";
 import type { House, Officer } from "@/lib/types";
 import { useSidebar } from "@/components/sidebar-provider";
 import { useToast } from "@/components/ui/use-toast";
@@ -150,7 +147,7 @@ export default function EditBeneficiaryPage() {
 
         if (houseData) {
           setHouse(houseData);
-          setImages(houseData.images);
+          setImages(houseData.images || []);
 
           // Set form values
           form.reset({
@@ -168,19 +165,19 @@ export default function EditBeneficiaryPage() {
             remarks: houseData.remarks,
             lat: houseData.lat,
             lng: houseData.lng,
-            fundAllocated: houseData.fundDetails.allocated,
-            fundReleased: houseData.fundDetails.released,
-            fundUtilized: houseData.fundDetails.utilized,
-            foundationStatus: houseData.constructionDetails.foundation.status,
+            fundAllocated: houseData.fundDetails?.allocated || "",
+            fundReleased: houseData.fundDetails?.released || "",
+            fundUtilized: houseData.fundDetails?.utilized || "",
+            foundationStatus: houseData.constructionDetails?.foundation?.status || "Not Started",
             foundationDate:
-              houseData.constructionDetails.foundation.completionDate || "",
-            wallsStatus: houseData.constructionDetails.walls.status,
-            wallsDate: houseData.constructionDetails.walls.completionDate || "",
-            roofStatus: houseData.constructionDetails.roof.status,
-            roofDate: houseData.constructionDetails.roof.completionDate || "",
-            finishingStatus: houseData.constructionDetails.finishing.status,
+              houseData.constructionDetails?.foundation?.completionDate || "",
+            wallsStatus: houseData.constructionDetails?.walls?.status || "Not Started",
+            wallsDate: houseData.constructionDetails?.walls?.completionDate || "",
+            roofStatus: houseData.constructionDetails?.roof?.status || "Not Started",
+            roofDate: houseData.constructionDetails?.roof?.completionDate || "",
+            finishingStatus: houseData.constructionDetails?.finishing?.status || "Not Started",
             finishingDate:
-              houseData.constructionDetails.finishing.completionDate || "",
+              houseData.constructionDetails?.finishing?.completionDate || "",
           });
         }
 
@@ -220,107 +217,122 @@ export default function EditBeneficiaryPage() {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    if (!house) return;
+  // Fix the onSubmit function to handle missing user information properly
 
-    setIsSubmitting(true);
+const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  // Check if house data is available
+  if (!house) {
+    console.error("House data is missing");
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: "Beneficiary data could not be loaded. Please try again.",
+    });
+    return;
+  }
 
+  // Use a default user value if user is not available
+  const currentUser = user || { name: "System", email: "system@example.com" };
+
+  setIsSubmitting(true);
+
+  try {
+    // Calculate remaining fund
+    const allocated = parseInt(data.fundAllocated.replace(/[^0-9]/g, "") || "0", 10);
+    const utilized = parseInt(data.fundUtilized.replace(/[^0-9]/g, "") || "0", 10);
+    const remaining = allocated - utilized;
+
+    console.log("Preparing submission data...");
+
+    // Prepare house data for pending approval
+    const pendingEntry = {
+      id: Date.now(), // Generate a unique ID for pending entry
+      originalHouseId: house.id, // Store reference to the original house
+      updateType: "edit", // Indicate this is an edit, not a new entry
+      beneficiaryName: data.beneficiaryName,
+      constituency: data.constituency, 
+      village: data.village,
+      stage: data.stage,
+      progress: data.progress,
+      lat: data.lat,
+      lng: data.lng,
+      images: images,
+      startDate: data.startDate,
+      expectedCompletion: data.expectedCompletion,
+      contactNumber: data.contactNumber,
+      aadharNumber: data.aadharNumber,
+      familyMembers: data.familyMembers,
+      assignedOfficer: data.assignedOfficer,
+      remarks: data.remarks || "",
+            submittedBy: data.assignedOfficer,
+      submittedOn: new Date().toISOString(),
+      fundDetails: {
+        allocated: data.fundAllocated,
+        released: data.fundReleased,
+        utilized: data.fundUtilized,
+        remaining: `Rs. ${remaining.toLocaleString()}`,
+      },
+      constructionDetails: {
+        foundation: {
+          status: data.foundationStatus,
+          completionDate: data.foundationStatus === "Completed" ? data.foundationDate : undefined,
+        },
+        walls: {
+          status: data.wallsStatus,
+          completionDate: data.wallsStatus === "Completed" ? data.wallsDate : undefined,
+        },
+        roof: {
+          status: data.roofStatus,
+          completionDate: data.roofStatus === "Completed" ? data.roofDate : undefined,
+        },
+        finishing: {
+          status: data.finishingStatus,
+          completionDate: data.finishingStatus === "Completed" ? data.finishingDate : undefined,
+        },
+      },
+    };
+
+    console.log("Submitting data to API...");
+
+    // Send to pending entries API endpoint
     try {
-      // Calculate remaining fund
-      const allocated = Number.parseInt(
-        data.fundAllocated.replace(/[^0-9]/g, "")
-      );
-      const utilized = Number.parseInt(
-        data.fundUtilized.replace(/[^0-9]/g, "")
-      );
-      const remaining = allocated - utilized;
-
-      // Prepare house data
-      const houseData: Partial<House> = {
-        beneficiaryName: data.beneficiaryName,
-        constituency: data.constituency, 
-        village: data.village,
-        stage: data.stage,
-        progress: data.progress,
-        fundUtilized: data.fundUtilized,
-        lat: data.lat,
-        lng: data.lng,
-        images: images,
-        lastUpdated: new Date().toISOString().split("T")[0],
-        startDate: data.startDate,
-        expectedCompletion: data.expectedCompletion,
-        contactNumber: data.contactNumber,
-        aadharNumber: data.aadharNumber,
-        familyMembers: data.familyMembers,
-        assignedOfficer: data.assignedOfficer,
-        remarks: data.remarks || "",
-        fundDetails: {
-          allocated: data.fundAllocated,
-          released: data.fundReleased,
-          utilized: data.fundUtilized,
-          remaining: `Rs. ${remaining.toLocaleString()}`,
+      const response = await fetch('/api/pending-entries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        constructionDetails: {
-          foundation: {
-            status: data.foundationStatus as
-              | "Not Started"
-              | "In Progress"
-              | "Completed",
-            completionDate:
-              data.foundationStatus === "Completed"
-                ? data.foundationDate
-                : undefined,
-          },
-          walls: {
-            status: data.wallsStatus as
-              | "Not Started"
-              | "In Progress"
-              | "Completed",
-            completionDate:
-              data.wallsStatus === "Completed" ? data.wallsDate : undefined,
-          },
-          roof: {
-            status: data.roofStatus as
-              | "Not Started"
-              | "In Progress"
-              | "Completed",
-            completionDate:
-              data.roofStatus === "Completed" ? data.roofDate : undefined,
-          },
-          finishing: {
-            status: data.finishingStatus as
-              | "Not Started"
-              | "In Progress"
-              | "Completed",
-            completionDate:
-              data.finishingStatus === "Completed"
-                ? data.finishingDate
-                : undefined,
-          },
-        },
-      };
+        body: JSON.stringify(pendingEntry),
+      });
 
-      // Update house
-      const updatedHouse = await updateHouse(house.id, houseData);
+      const responseData = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(responseData.error || `API returned status ${response.status}`);
+      }
 
       toast({
         title: "Success",
-        description: "Beneficiary updated successfully",
+        description: "Changes submitted for approval. Updates will be visible after admin review.",
       });
 
-      // Redirect to the house details
+      // Redirect immediately - the delay was causing issues
       router.push(`/beneficiaries/${house.id}`);
-    } catch (error) {
-      console.error("Error updating house:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update beneficiary. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
+      
+    } catch (fetchError: any) {
+      console.error("Fetch error:", fetchError);
+      throw new Error(`Failed to submit data: ${fetchError.message}`);
     }
-  };
+  } catch (error: any) {
+    console.error("Error submitting changes:", error);
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: error.message || "Failed to submit changes. Please try again.",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   if (isLoading) {
     return (
@@ -357,7 +369,7 @@ export default function EditBeneficiaryPage() {
             Edit Beneficiary
           </h2>
           <p className="text-muted-foreground">
-            Update beneficiary information and construction progress
+            Updates require admin approval before they are applied
           </p>
         </div>
         <Button variant="outline" onClick={() => router.back()}>
@@ -365,6 +377,22 @@ export default function EditBeneficiaryPage() {
           Back
         </Button>
       </div>
+
+      {/* Notice box about approval process */}
+      <Card className="bg-amber-50 border-amber-200">
+        <CardContent className="pt-4 pb-2">
+          <div className="flex items-start gap-2">
+            <FileText className="h-5 w-5 text-amber-600 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-amber-800">Approval Required</p>
+              <p className="text-xs text-amber-700">
+                Changes submitted through this form will be sent for admin approval. 
+                The original beneficiary details will remain unchanged until approved.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -1104,12 +1132,12 @@ export default function EditBeneficiaryPage() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
+                      Submitting for Approval...
                     </>
                   ) : (
                     <>
                       <Check className="mr-2 h-4 w-4" />
-                      Update Beneficiary
+                      Submit for Approval
                     </>
                   )}
                 </Button>
